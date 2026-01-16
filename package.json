@@ -1,0 +1,26 @@
+{
+    "name": "canvas-addon",
+    "version": "1.0.0",
+    "description": "Adobe Express Canvas - Living Documents That Notice, Remember, and Clarify",
+    "scripts": {
+        "clean": "ccweb-add-on-scripts clean",
+        "build": "ccweb-add-on-scripts build && npx tailwindcss -i ./src/input.css -o ./src/output.css",
+        "start": "concurrently \"ccweb-add-on-scripts start\" \"npx tailwindcss -i ./src/input.css -o ./src/output.css --watch\"",
+        "package": "ccweb-add-on-scripts package"
+    },
+    "keywords": [
+        "Adobe",
+        "Express",
+        "Canvas",
+        "Add-on"
+    ],
+    "devDependencies": {
+        "@adobe/ccweb-add-on-scripts": "^3.6.0",
+        "@types/adobe__ccweb-add-on-sdk": "^1.3.0",
+        "concurrently": "^9.1.2"
+    },
+    "dependencies": {
+        "@tailwindcss/cli": "^4.1.4",
+        "tailwindcss": "^4.1.4"
+    }
+}

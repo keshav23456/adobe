@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content="Adobe Express Canvas - Living Documents That Notice, Remember, and Clarify" />
+        <meta name="keywords" content="Adobe, Express, Canvas, Document, Add-On" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Canvas</title>
+        <link rel="stylesheet" href="output.css">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                padding: 20px;
+            }
+
+            .container {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            /* Glassmorphism Card */
+            .glass-card {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-radius: 20px;
+                padding: 24px;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                margin-bottom: 16px;
+            }
+
+            /* Header */
+            .header {
+                text-align: center;
+                margin-bottom: 24px;
+            }
+
+            .header-icon {
+                font-size: 48px;
+                margin-bottom: 12px;
+                animation: float 3s ease-in-out infinite;
+            }
+
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+            }
+
+            .title {
+                font-size: 28px;
+                font-weight: 800;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+                color: #6b7280;
+                line-height: 1.5;
+            }
+
+            /* Status Messages */
+            .status-box {
+                padding: 12px 16px;
+                border-radius: 12px;
+                font-size: 13px;
+                font-weight: 500;
+                margin-bottom: 16px;
+                display: none;
+                animation: slideIn 0.3s ease-out;
+            }
+
+            @keyframes slideIn {
+                from { transform: translateY(-10px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+
+            .status-info {
+                background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+                color: #1e40af;
+                border: 1px solid #93c5fd;
+            }
+
+            .status-success {
+                background: linear-gradient(135deg, #d1fae5 0%, #dcfce7 100%);
+                color: #065f46;
+                border: 1px solid #86efac;
+            }
+
+            .status-error {
+                background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+                color: #991b1b;
+                border: 1px solid #fca5a5;
+            }
+
+            /* Canvas Link Box */
+            .canvas-link-box {
+                background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+                padding: 16px;
+                border-radius: 16px;
+                border: 2px solid #34d399;
+                margin-bottom: 16px;
+                display: none;
+                animation: slideIn 0.3s ease-out;
+            }
+
+            .canvas-link-header {
+                font-size: 14px;
+                font-weight: 700;
+                color: #065f46;
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .link-container {
+                display: flex;
+                gap: 8px;
+            }
+
+            .link-input {
+                flex: 1;
+                padding: 10px 12px;
+                border: 2px solid #10b981;
+                border-radius: 10px;
+                font-size: 12px;
+                background: white;
+                color: #065f46;
+                font-weight: 500;
+            }
+
+            .copy-btn {
+                padding: 10px 20px;
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: white;
+                border: none;
+                border-radius: 10px;
+                font-weight: 600;
+                font-size: 13px;
+                cursor: pointer;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .copy-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            }
+
+            .copy-btn:active {
+                transform: translateY(0);
+            }
+
+            /* Action Buttons */
+            .action-btn {
+                width: 100%;
+                padding: 16px;
+                border: none;
+                border-radius: 16px;
+                font-weight: 700;
+                font-size: 15px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .action-btn:disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+
+            .action-btn:not(:disabled):hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            }
+
+            .action-btn:not(:disabled):active {
+                transform: translateY(0);
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                box-shadow: 0 4px 15px 0 rgba(102, 126, 234, 0.4);
+            }
+
+            .btn-secondary {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                color: white;
+                box-shadow: 0 4px 15px 0 rgba(240, 147, 251, 0.4);
+            }
+
+            .btn-tertiary {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                color: white;
+                box-shadow: 0 4px 15px 0 rgba(79, 172, 254, 0.4);
+            }
+
+            /* Feature List */
+            .feature-card {
+                background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+                border: 2px solid #fbbf24;
+                border-radius: 16px;
+                padding: 20px;
+            }
+
+            .feature-title {
+                font-size: 14px;
+                font-weight: 700;
+                color: #78350f;
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .feature-list {
+                list-style: none;
+            }
+
+            .feature-item {
+                font-size: 12px;
+                color: #92400e;
+                padding: 8px 0;
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+                line-height: 1.5;
+            }
+
+            .feature-icon {
+                font-size: 16px;
+                flex-shrink: 0;
+            }
+
+            /* Animations */
+            .pulse {
+                animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+
+            @keyframes pulse {
+                0%, 100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.8;
+                }
+            }
+
+            .btn-icon {
+                font-size: 18px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header -->
+            <div class="glass-card header">
+                <div class="header-icon">📄</div>
+                <h1 class="title">Canvas</h1>
+                <p class="subtitle">Living Documents That Notice, Remember, and Clarify</p>
+            </div>
+
+            <!-- Status Messages -->
+            <div id="status" class="status-box">
+                <span id="statusMessage"></span>
+            </div>
+
+            <!-- Canvas Link -->
+            <div id="canvasLinkContainer" class="canvas-link-box">
+                <div class="canvas-link-header">
+                    <span>✨</span>
+                    <span>Canvas Published Successfully!</span>
+                </div>
+                <div class="link-container">
+                    <input 
+                        type="text" 
+                        id="canvasLink" 
+                        readonly 
+                        class="link-input"
+                    >
+                    <button onclick="copyLink()" class="copy-btn">
+                        📋 Copy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Actions -->
+            <div class="glass-card">
+                <button id="publishCanvas" disabled class="action-btn btn-primary">
+                    <span class="btn-icon">🚀</span>
+                    <span>Publish as Canvas</span>
+                </button>
+
+                <button id="createMilestone" disabled class="action-btn btn-secondary">
+                    <span class="btn-icon">💾</span>
+                    <span>Create Milestone</span>
+                </button>
+
+                <button id="viewInsights" disabled class="action-btn btn-tertiary">
+                    <span class="btn-icon">👁️</span>
+                    <span>View Insights</span>
+                </button>
+            </div>
+
+            <!-- Features -->
+            <div class="feature-card">
+                <div class="feature-title">
+                    <span>✨</span>
+                    <span>Features</span>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">✅</span>
+                        <span><strong>Publish as Canvas</strong> - Share living documents</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✅</span>
+                        <span><strong>Blind Spots</strong> - See what was skipped</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✅</span>
+                        <span><strong>Milestones</strong> - Save meaningful versions</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✅</span>
+                        <span><strong>Insight View</strong> - Convert text to bullets</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <script type="module" src="add-on-console-override.js"></script>
+        <script type="module" src="ui/index.js"></script>
+    </body>
+</html>
